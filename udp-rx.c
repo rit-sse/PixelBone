@@ -19,7 +19,6 @@
 int main(int argc, char **argv) {
   int port = 9999;
   int num_pixels = 256;
-  int num_strips = LEDSCAPE_NUM_STRIPS;
 
   extern char *optarg;
   int opt;
@@ -67,7 +66,7 @@ int main(int argc, char **argv) {
 
   unsigned frame_num = 0;
 
-  uint8_t buf[num_pixels * num_strips * 4];
+  uint8_t buf[num_pixels * 4];
 
   time_t last_time = time(NULL);
   int fps_counter = 0;
@@ -81,12 +80,10 @@ int main(int argc, char **argv) {
     ledscape_frame_t *const frame = ledscape_frame(leds, frame_num);
 
     for (unsigned x = 0; x < num_pixels; x++) {
-      for (unsigned strip = 0; strip < num_strips; strip++) {
-        const uint8_t r = buf[strip * num_pixels * 3 + x * 3 + 0];
-        const uint8_t g = buf[strip * num_pixels * 3 + x * 3 + 1];
-        const uint8_t b = buf[strip * num_pixels * 3 + x * 3 + 2];
-        ledscape_set_color(frame, strip, x, r, g, b);
-      }
+      const uint8_t r = buf[x * 3 + 0];
+      const uint8_t g = buf[x * 3 + 1];
+      const uint8_t b = buf[x * 3 + 2];
+      ledscape_set_color(frame, 0, x, r, g, b);
     }
 
     ledscape_wait(leds);

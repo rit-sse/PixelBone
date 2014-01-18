@@ -10,13 +10,6 @@
 
 #include <stdint.h>
 
-/** The number of strips supported.
- *
- * Changing this also requires changes in ws281x.p to stride the
- * correct number of bytes per row..
- */
-#define LEDSCAPE_NUM_STRIPS 1
-
 /** LEDscape pixel format is BRGA.
  *
  * data is laid out with BRGA format, since that is how it will
@@ -35,9 +28,7 @@ typedef struct {
  * This makes it easier to clock out while reading from the DDR
  * in a burst mode.
  */
-typedef struct {
-  ledscape_pixel_t strip[LEDSCAPE_NUM_STRIPS];
-} __attribute__((__packed__)) ledscape_frame_t;
+typedef ledscape_pixel_t ledscape_frame_t;
 
 typedef struct ledscape ledscape_t;
 

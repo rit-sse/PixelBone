@@ -101,7 +101,7 @@ uint32_t ledscape_wait(ledscape_t *const leds) {
 ledscape_t *ledscape_init(unsigned num_pixels) {
   pru_t *const pru0 = pru_init(0);
 
-  const size_t frame_size = num_pixels * LEDSCAPE_NUM_STRIPS * 4;
+  const size_t frame_size = num_pixels * 4;
 
   if (2 * frame_size > pru0->ddr_size)
     die("Pixel data needs at least 2 * %zu, only %zu in DDR\n", frame_size,
@@ -144,7 +144,7 @@ void ledscape_close(ledscape_t *const leds) {
 
 void ledscape_set_color(ledscape_frame_t *const frame, uint8_t strip,
                         uint8_t pixel, uint8_t r, uint8_t g, uint8_t b) {
-  ledscape_pixel_t *const p = &frame[pixel].strip[strip];
+  ledscape_pixel_t *const p = &frame[pixel];
   p->r = r;
   p->g = g;
   p->b = b;
