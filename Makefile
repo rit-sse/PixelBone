@@ -2,9 +2,9 @@
 #
 # The top level targets link in the two .o files for now.
 #
-TARGETS += rgb-test
-TARGETS += fade-test
-TARGETS += fire
+TARGETS += examples/rgb-test
+TARGETS += examples/fade-test
+TARGETS += examples/fire
 TARGETS += udp-rx
 TARGETS += opc-rx
 
@@ -89,6 +89,7 @@ $(TARGETS):
 
 clean:
 	rm -rf \
+		**/*.o \
 		*.o \
 		*.i \
 		.*.o.d \
@@ -96,23 +97,6 @@ clean:
 		$(INCDIR_APP_LOADER)/*~ \
 		$(TARGETS) \
 		*.bin \
-
-
-###########
-# 
-# The correct way to reserve the GPIO pins on the BBB is with the
-# capemgr and a Device Tree file.  But it doesn't work.
-#
-SLOT_FILE=/sys/devices/bone_capemgr.8/slots
-dts: LEDscape.dts
-	@SLOT="`grep LEDSCAPE $(SLOT_FILE) | cut -d: -f1`"; \
-	if [ ! -z "$$SLOT" ]; then \
-		echo "Removing slot $$SLOT"; \
-		echo -$$SLOT > $(SLOT_FILE); \
-	fi
-	dtc -O dtb -o /lib/firmware/BB-LEDSCAPE-00A0.dtbo -b 0 -@ LEDscape.dts
-	echo BB-LEDSCAPE > $(SLOT_FILE)
-
 
 ###########
 # 
