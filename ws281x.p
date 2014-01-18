@@ -193,7 +193,6 @@ WORD_LOOP:
 			gpioN##_##regN##_skip: ; \
 
 		// Load 1 register of data, starting at r10
-		//LBBO r10, r0, 0, 16*4
 		LBBO r10, r0, 0, 4
 		MOV gpio0_zeros, 0
 
@@ -230,7 +229,7 @@ WORD_LOOP:
 
 	// The RGB streams have been clocked out
 	// Move to the next pixel on each row
-	ADD data_addr, data_addr, 48 * 4
+	ADD data_addr, data_addr, 4
 	SUB data_len, data_len, 1
 	QBNE WORD_LOOP, data_len, #0
 

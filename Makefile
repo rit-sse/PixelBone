@@ -11,7 +11,7 @@ TARGETS += opc-rx
 LEDSCAPE_OBJS = ledscape.o pru.o util.o
 LEDSCAPE_LIB := libledscape.a
 
-all: $(TARGETS) ws281x_0.bin ws281x_1.bin
+all: $(TARGETS) ws281x.bin
 
 
 ifeq ($(shell uname -m),armv7l)

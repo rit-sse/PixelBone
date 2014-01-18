@@ -12,11 +12,8 @@
 
 // Refer to this mapping in the file - \prussdrv\include\pruss_intc_mapping.h
 #define PRU0_PRU1_INTERRUPT     17
-#define PRU1_PRU0_INTERRUPT     18
 #define PRU0_ARM_INTERRUPT      19
-#define PRU1_ARM_INTERRUPT      20
 #define ARM_PRU0_INTERRUPT      21
-#define ARM_PRU1_INTERRUPT      22
 
 #define CONST_PRUDRAM   C24
 #define CONST_SHAREDRAM C28
@@ -37,11 +34,8 @@
 
 // Refer to this mapping in the file - \prussdrv\include\pruss_intc_mapping.h
 #define PRU0_PRU1_INTERRUPT     32
-#define PRU1_PRU0_INTERRUPT     33
 #define PRU0_ARM_INTERRUPT      34
-#define PRU1_ARM_INTERRUPT      35
 #define ARM_PRU0_INTERRUPT      36
-#define ARM_PRU1_INTERRUPT      37
 
 #define CONST_PRUDRAM   C3
 #define CONST_HPI       C15
@@ -114,9 +108,6 @@
 
 /** Mappings of the GPIO devices */
 #define GPIO0 0x44E07000
-#define GPIO1 0x4804c000
-#define GPIO2 0x481AC000
-#define GPIO3 0x481AE000
 
 /** Offsets for the clear and set registers in the devices */
 #define GPIO_CLEARDATAOUT 0x190

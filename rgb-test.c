@@ -98,7 +98,7 @@ void HSBtoRGB(int hue, int sat, int val, uint8_t out[]) {
 }
 
 int main(void) {
-  const int num_pixels = 170;
+  const int num_pixels = 128;
   ledscape_t *const leds = ledscape_init(num_pixels);
   time_t last_time = time(NULL);
   unsigned last_i = 0;
