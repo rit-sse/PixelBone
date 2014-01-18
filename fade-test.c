@@ -11,13 +11,6 @@
 #include <unistd.h>
 #include "ledscape.h"
 
-static void ledscape_fill_color(ledscape_frame_t *const frame,
-                                const unsigned num_pixels, const uint8_t r,
-                                const uint8_t g, const uint8_t b) {
-  for (unsigned i = 0; i < num_pixels; i++)
-    for (unsigned strip = 0; strip < LEDSCAPE_NUM_STRIPS; strip++)
-      ledscape_set_color(frame, strip, i, r, g, b);
-}
 
 int lumCorrection[] = {
   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   1,   1,
@@ -46,7 +39,6 @@ int main(void) {
   time_t last_time = time(NULL);
   unsigned last_i = 0;
 
-  uint8_t rgb[3];
 
   unsigned i = 0;
   while (1) {
@@ -54,10 +46,6 @@ int main(void) {
     const unsigned frame_num = i++ % 2;
     ledscape_frame_t *const frame = ledscape_frame(leds, frame_num);
 
-    uint8_t val = i >> 1;
-    uint16_t r = ((i >> 0) & 0xFF);
-    uint16_t g = ((i >> 8) & 0xFF);
-    uint16_t b = ((i >> 16) & 0xFF);
 
     for (unsigned strip = 0; strip < 32; strip++) {
       for (unsigned p = 0; p < num_pixels; p++) {
