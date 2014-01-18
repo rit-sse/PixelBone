@@ -34,7 +34,6 @@
  *
 */
 
-
 /*===========================================================================
  * Copyright (c) Texas Instruments Inc 2010-12
  *
@@ -42,7 +41,6 @@
  * license agreement under which this software has been supplied or provided.
  * ============================================================================
  */
-
 
 /*===========================================================================
 // PASM - PRU Assembler
@@ -58,40 +56,38 @@
 //     21-Jun-13: 0.84 - Open source version
 ============================================================================*/
 
-#define DBGFILE_NAMELEN_SHORT   64
+#define DBGFILE_NAMELEN_SHORT 64
 
 typedef struct _DBGFILE_HEADER {
-    unsigned int    FileID;
-#define DBGFILE_FILEID_VER3     (0x10150000 | 0x03)
-    unsigned int    LabelCount;     /* Number of label records */
-    unsigned int    LabelOffset;    /* File offset to label records */
-    unsigned int    FileCount;      /* Number of file records */
-    unsigned int    FileOffset;     /* File offset to file records */
-    unsigned int    CodeCount;      /* Number of code records */
-    unsigned int    CodeOffset;     /* File offset to code records */
-    unsigned int    EntryPoint;     /* Program entrypoint */
-    unsigned int    Flags;          /* File format flags */
-#define DBGHDR_FLAGS_BIGENDIAN      0x00000001
+  unsigned int FileID;
+#define DBGFILE_FILEID_VER3 (0x10150000 | 0x03)
+  unsigned int LabelCount;  /* Number of label records */
+  unsigned int LabelOffset; /* File offset to label records */
+  unsigned int FileCount;   /* Number of file records */
+  unsigned int FileOffset;  /* File offset to file records */
+  unsigned int CodeCount;   /* Number of code records */
+  unsigned int CodeOffset;  /* File offset to code records */
+  unsigned int EntryPoint;  /* Program entrypoint */
+  unsigned int Flags;       /* File format flags */
+#define DBGHDR_FLAGS_BIGENDIAN 0x00000001
 } DBGFILE_HEADER;
 
 typedef struct _DBGFILE_LABEL {
-    unsigned int    AddrOffset;
-    char            Name[DBGFILE_NAMELEN_SHORT];
+  unsigned int AddrOffset;
+  char Name[DBGFILE_NAMELEN_SHORT];
 } DBGFILE_LABEL;
 
 typedef struct _DBGFILE_FILE {
-    char            SourceName[DBGFILE_NAMELEN_SHORT];
+  char SourceName[DBGFILE_NAMELEN_SHORT];
 } DBGFILE_FILE;
 
 typedef struct _DBGFILE_CODE {
-    unsigned char   Flags;          /* Record flags */
+  unsigned char Flags; /* Record flags */
 #define DBGFILE_CODE_FLG_FILEINFO 0x01
-#define DBGFILE_CODE_FLG_CANMAP   0x02
-    unsigned char   Resv8;          /* Reserved */
-    unsigned short  FileIndex;      /* Source file index */
-    unsigned int    Line;           /* The line number */
-    unsigned int    AddrOffset;     /* Code address offset */
-    unsigned int    CodeWord;       /* Code */
+#define DBGFILE_CODE_FLG_CANMAP 0x02
+  unsigned char Resv8;      /* Reserved */
+  unsigned short FileIndex; /* Source file index */
+  unsigned int Line;        /* The line number */
+  unsigned int AddrOffset;  /* Code address offset */
+  unsigned int CodeWord;    /* Code */
 } DBGFILE_CODE;
-
-

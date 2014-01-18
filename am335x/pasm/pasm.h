@@ -61,103 +61,102 @@ typedef unsigned int uint;
 
 #include "pru_ins.h"
 
-#define TOKEN_MAX_LEN   128
+#define TOKEN_MAX_LEN 128
 
 /* Label Record */
-#define LABEL_NAME_LEN  TOKEN_MAX_LEN
+#define LABEL_NAME_LEN TOKEN_MAX_LEN
 typedef struct _LABEL {
-    struct _LABEL   *pPrev;         /* Previous in LABEL list */
-    struct _LABEL   *pNext;         /* Next in LABEL list */
-    int             Offset;         /* Offset Value */
-    char            Name[LABEL_NAME_LEN];
+  struct _LABEL *pPrev; /* Previous in LABEL list */
+  struct _LABEL *pNext; /* Next in LABEL list */
+  int Offset;           /* Offset Value */
+  char Name[LABEL_NAME_LEN];
 } LABEL;
 
 /* Source File Record */
-#define SOURCE_NAME     64
+#define SOURCE_NAME 64
 #define SOURCE_BASE_DIR 256
 typedef struct _SOURCEFILE {
-    struct _SOURCE  *pParent;       /* The file that included this file */
-    FILE            *FilePtr;       /* Open file handle */
-    unsigned int    InUse;          /* Set to '1' if file is active */
-    unsigned int    FileIndex;      /* Index of this source file in CODEGEN */
-    unsigned int    CurrentLine;    /* The current line being read */
-    unsigned int    CurrentColumn;  /* The current column being read */
-    unsigned int    ccDepthIn;      /* Original condition code depth */
-    char            LastChar;       /* Last character read from file */
-    char            SourceName[SOURCE_NAME];
-    char            SourceBaseDir[SOURCE_BASE_DIR];
+  struct _SOURCE *pParent;    /* The file that included this file */
+  FILE *FilePtr;              /* Open file handle */
+  unsigned int InUse;         /* Set to '1' if file is active */
+  unsigned int FileIndex;     /* Index of this source file in CODEGEN */
+  unsigned int CurrentLine;   /* The current line being read */
+  unsigned int CurrentColumn; /* The current column being read */
+  unsigned int ccDepthIn;     /* Original condition code depth */
+  char LastChar;              /* Last character read from file */
+  char SourceName[SOURCE_NAME];
+  char SourceBaseDir[SOURCE_BASE_DIR];
 } SOURCEFILE;
 
 /* Source Line Record */
-#define MAX_TOKENS      12
-#define SRC_FLG_LABEL       (1<<0)
-#define SRC_FLG_DOTCMD1     (1<<1)
-#define SRC_FLG_DOTCMD2     (1<<2)
+#define MAX_TOKENS 12
+#define SRC_FLG_LABEL (1 << 0)
+#define SRC_FLG_DOTCMD1 (1 << 1)
+#define SRC_FLG_DOTCMD2 (1 << 2)
 typedef struct _SRCLINE {
-    uint    Flags;
-    uint    Terms;
-    char    Label[TOKEN_MAX_LEN];
-    char    Term[MAX_TOKENS][TOKEN_MAX_LEN];
+  uint Flags;
+  uint Terms;
+  char Label[TOKEN_MAX_LEN];
+  char Term[MAX_TOKENS][TOKEN_MAX_LEN];
 } SRCLINE;
 
 /* CodeGen Record */
 typedef struct _CODEGEN {
-    unsigned char   Flags;          /* Record flags */
+  unsigned char Flags; /* Record flags */
 #define CODEGEN_FLG_FILEINFO 0x01
-#define CODEGEN_FLG_CANMAP   0x02
-    unsigned char   Resv8;          /* Reserved */
-    unsigned short  FileIndex;      /* Source file index */
-    unsigned int    Line;           /* The line number */
-    unsigned int    AddrOffset;     /* Code address offset */
-    unsigned int    CodeWord;       /* Code */
+#define CODEGEN_FLG_CANMAP 0x02
+  unsigned char Resv8;      /* Reserved */
+  unsigned short FileIndex; /* Source file index */
+  unsigned int Line;        /* The line number */
+  unsigned int AddrOffset;  /* Code address offset */
+  unsigned int CodeWord;    /* Code */
 } CODEGEN;
 
 /* User Options */
 extern unsigned int Options;
-#define OPTION_BINARY               (1<<0)
-#define OPTION_BINARYBIG            (1<<1)
-#define OPTION_CARRAY               (1<<2)
-#define OPTION_IMGFILE              (1<<3)
-#define OPTION_DBGFILE              (1<<4)
-#define OPTION_LISTING              (1<<5)
-#define OPTION_DEBUG                (1<<6)
-#define OPTION_BIGENDIAN            (1<<7)
-#define OPTION_RETREGSET            (1<<8)
-#define OPTION_SOURCELISTING        (1<<9)
+#define OPTION_BINARY (1 << 0)
+#define OPTION_BINARYBIG (1 << 1)
+#define OPTION_CARRAY (1 << 2)
+#define OPTION_IMGFILE (1 << 3)
+#define OPTION_DBGFILE (1 << 4)
+#define OPTION_LISTING (1 << 5)
+#define OPTION_DEBUG (1 << 6)
+#define OPTION_BIGENDIAN (1 << 7)
+#define OPTION_RETREGSET (1 << 8)
+#define OPTION_SOURCELISTING (1 << 9)
 extern unsigned int Core;
-#define CORE_NONE                   0
-#define CORE_V0                     1
-#define CORE_V1                     2
-#define CORE_V2                     3
-#define CORE_V3                     4
-extern FILE         *CArrayFile;
-extern FILE         *ListingFile;
+#define CORE_NONE 0
+#define CORE_V0 1
+#define CORE_V1 2
+#define CORE_V2 3
+#define CORE_V3 4
+extern FILE *CArrayFile;
+extern FILE *ListingFile;
 
 /* Assembler Engine */
-extern int  Pass;                   /* Pass 1 or 2 of parser */
-extern int  HaveEntry;              /* Entrypont flag (init to 0) */
-extern int  EntryPoint;             /* Entrypont (init to -1) */
-extern int  CodeOffset;             /* Current instruction "word" offset (zero based) */
-extern int  Errors;                 /* Total number or errors */
-extern int  FatalError;             /* Set on fatal error */
-extern int  Warnings;               /* Total number of warnings */
-extern uint RetRegValue;            /* Return register index */
-extern uint RetRegField;            /* Return register field */
+extern int Pass;         /* Pass 1 or 2 of parser */
+extern int HaveEntry;    /* Entrypont flag (init to 0) */
+extern int EntryPoint;   /* Entrypont (init to -1) */
+extern int CodeOffset;   /* Current instruction "word" offset (zero based) */
+extern int Errors;       /* Total number or errors */
+extern int FatalError;   /* Set on fatal error */
+extern int Warnings;     /* Total number of warnings */
+extern uint RetRegValue; /* Return register index */
+extern uint RetRegField; /* Return register field */
 
-#define DEFAULT_RETREGVAL   30
-#define DEFAULT_RETREGFLD   FIELDTYPE_15_0
+#define DEFAULT_RETREGVAL 30
+#define DEFAULT_RETREGFLD FIELDTYPE_15_0
 
-#define SOURCEFILE_MAX      64
+#define SOURCEFILE_MAX 64
 extern SOURCEFILE sfArray[SOURCEFILE_MAX];
 extern unsigned int sfIndex;
 
 /* Use platform appropriate function for case-insensitive string compare */
 #ifdef _MSC_VER
-  #define stricmp _stricmp
+#define stricmp _stricmp
 #elif defined(__GNUC__)
-  #define stricmp strcasecmp
+#define stricmp strcasecmp
 #endif
-
 
 /*=====================================================================
 //
@@ -172,8 +171,7 @@ extern unsigned int sfIndex;
 //
 // Returns index of opcode, 0 if not an opcode
 */
-int CheckOpcode( char *word );
-
+int CheckOpcode(char *word);
 
 /*
 // CheckTokenType
@@ -182,15 +180,15 @@ int CheckOpcode( char *word );
 //
 // Returns token type flags
 */
-uint CheckTokenType( char *word );
-#define TOKENTYPE_UNRESERVED        0
-#define TOKENTYPE_FLG_OPCODE        0x0001
-#define TOKENTYPE_FLG_DIRECTIVE     0x0002
-#define TOKENTYPE_FLG_REG_BASE      0x0004
-#define TOKENTYPE_FLG_REG_ADDR      0x0008
-#define TOKENTYPE_FLG_REG_PTR       0x0010
-#define TOKENTYPE_FLG_REG_POSTINC   0x0020
-#define TOKENTYPE_FLG_REG_PREDEC    0x0040
+uint CheckTokenType(char *word);
+#define TOKENTYPE_UNRESERVED 0
+#define TOKENTYPE_FLG_OPCODE 0x0001
+#define TOKENTYPE_FLG_DIRECTIVE 0x0002
+#define TOKENTYPE_FLG_REG_BASE 0x0004
+#define TOKENTYPE_FLG_REG_ADDR 0x0008
+#define TOKENTYPE_FLG_REG_PTR 0x0010
+#define TOKENTYPE_FLG_REG_POSTINC 0x0020
+#define TOKENTYPE_FLG_REG_PREDEC 0x0040
 
 /*
 // ProcessOp
@@ -207,7 +205,7 @@ uint CheckTokenType( char *word );
 //      1 : Success
 //      0 : Error
 */
-int ProcessOp( SOURCEFILE *ps, int TermCnt, char **pTerms );
+int ProcessOp(SOURCEFILE *ps, int TermCnt, char **pTerms);
 
 /*
 // GetRegister
@@ -227,8 +225,8 @@ int ProcessOp( SOURCEFILE *ps, int TermCnt, char **pTerms );
 //      1 : Success
 //      0 : Error
 */
-int GetRegister( SOURCEFILE *ps, int num, char *src, PRU_ARG *pa, int fBitOk, char termC );
-
+int GetRegister(SOURCEFILE *ps, int num, char *src, PRU_ARG *pa, int fBitOk,
+                char termC);
 
 /*=====================================================================
 //
@@ -243,7 +241,7 @@ int GetRegister( SOURCEFILE *ps, int num, char *src, PRU_ARG *pa, int fBitOk, ch
 //
 // Returns 1 if the word is a command, else zero
 */
-int CheckDotCommand( char *word );
+int CheckDotCommand(char *word);
 
 /*
 // DotCommand
@@ -262,7 +260,8 @@ int CheckDotCommand( char *word );
 //    >=0 : Success - Length of assemby line (0 to MaxSrc)
 //     <0 : Illegal command
 */
-int DotCommand( SOURCEFILE *ps, int TermCnt, char **pTerms, char *Src, int MaxSrc );
+int DotCommand(SOURCEFILE *ps, int TermCnt, char **pTerms, char *Src,
+               int MaxSrc);
 
 /*
 // DotInitialize
@@ -282,8 +281,6 @@ void DotInitialize(int pass);
 */
 void DotCleanup(int pass);
 
-
-
 /*=====================================================================
 //
 // Functions Implemented by the Structure/Scope Module
@@ -297,8 +294,7 @@ void DotCleanup(int pass);
 //    0 - Success
 //   -1 - Error
 */
-int ScopeEnter( SOURCEFILE *ps, char *Name );
-
+int ScopeEnter(SOURCEFILE *ps, char *Name);
 
 /*
 // ScopeLeave
@@ -307,8 +303,7 @@ int ScopeEnter( SOURCEFILE *ps, char *Name );
 //    0 - Success
 //   -1 - Error
 */
-int ScopeLeave( SOURCEFILE *ps, char *Name );
-
+int ScopeLeave(SOURCEFILE *ps, char *Name);
 
 /*
 // ScopeUsing
@@ -317,8 +312,7 @@ int ScopeLeave( SOURCEFILE *ps, char *Name );
 //    0 - Success
 //   -1 - Error
 */
-int ScopeUsing( SOURCEFILE *ps, char *Name );
-
+int ScopeUsing(SOURCEFILE *ps, char *Name);
 
 /*
 // StructInit
@@ -327,14 +321,12 @@ int ScopeUsing( SOURCEFILE *ps, char *Name );
 */
 void StructInit();
 
-
 /*
 // StructCleanup
 //
 // Returns: void
 */
 void StructCleanup();
-
 
 /*
 // StructNew
@@ -343,8 +335,7 @@ void StructCleanup();
 //    0 - Success
 //   -1 - Error
 */
-int StructNew( SOURCEFILE *ps, char *Name );
-
+int StructNew(SOURCEFILE *ps, char *Name);
 
 /*
 // StructEnd
@@ -353,8 +344,7 @@ int StructNew( SOURCEFILE *ps, char *Name );
 //    0 - Success
 //   -1 - Error
 */
-int StructEnd( SOURCEFILE *ps );
-
+int StructEnd(SOURCEFILE *ps);
 
 /*
 // StructAddElement
@@ -363,8 +353,7 @@ int StructEnd( SOURCEFILE *ps );
 //
 // Returns 0 on success, -1 on error
 */
-int StructAddElement( SOURCEFILE *ps, char *Name, uint size );
-
+int StructAddElement(SOURCEFILE *ps, char *Name, uint size);
 
 /*
 // StructAssign
@@ -373,9 +362,8 @@ int StructAddElement( SOURCEFILE *ps, char *Name, uint size );
 //
 // Returns 0 on success, -1 on error
 */
-int StructAssign( SOURCEFILE *ps, char *structName, char *rsName,
-                         char *reName, char *defName );
-
+int StructAssign(SOURCEFILE *ps, char *structName, char *rsName, char *reName,
+                 char *defName);
 
 /*
 // Struct Param Process
@@ -390,8 +378,7 @@ int StructAssign( SOURCEFILE *ps, char *structName, char *rsName,
 // Returns 0 for OK, or -1 for Fatal Error
 //
 */
-int StructParamProcess( SOURCEFILE *ps, int ParamIdx, char *source );
-
+int StructParamProcess(SOURCEFILE *ps, int ParamIdx, char *source);
 
 /*
 // CheckStruct
@@ -400,9 +387,7 @@ int StructParamProcess( SOURCEFILE *ps, int ParamIdx, char *source );
 //
 // Returns 1 on success, 0 on error
 */
-int CheckStruct( char *name );
-
-
+int CheckStruct(char *name);
 
 /*=====================================================================
 //
@@ -417,7 +402,7 @@ int CheckStruct( char *name );
 //
 // Returns 1 on success, 0 on error
 */
-int ProcessSourceFile( SOURCEFILE *ps );
+int ProcessSourceFile(SOURCEFILE *ps);
 
 /*
 // ProcessSourceLine
@@ -426,7 +411,7 @@ int ProcessSourceFile( SOURCEFILE *ps );
 //
 // Returns 1 on success, 0 on error
 */
-int ProcessSourceLine( SOURCEFILE *ps, int length, char *src );
+int ProcessSourceLine(SOURCEFILE *ps, int length, char *src);
 
 /*
 // ParseSourceLine
@@ -435,19 +420,19 @@ int ProcessSourceLine( SOURCEFILE *ps, int length, char *src );
 //
 // Returns 1 on success, 0 on error
 */
-int ParseSourceLine( SOURCEFILE *ps, int length, char *src, SRCLINE *pa );
+int ParseSourceLine(SOURCEFILE *ps, int length, char *src, SRCLINE *pa);
 
 /*
 // Report
 //
 // Report an abnormal condition
 */
-#define REP_INFO    0   /* Information only */
-#define REP_WARN1   1   /* Warn on pass1 */
-#define REP_WARN2   2   /* Warn on pass2 */
-#define REP_ERROR   3
-#define REP_FATAL   4
-void Report( SOURCEFILE *ps, int Level, char *fmt, ... );
+#define REP_INFO 0  /* Information only */
+#define REP_WARN1 1 /* Warn on pass1 */
+#define REP_WARN2 2 /* Warn on pass2 */
+#define REP_ERROR 3
+#define REP_FATAL 4
+void Report(SOURCEFILE *ps, int Level, char *fmt, ...);
 
 /*
 // LabelChar
@@ -457,8 +442,7 @@ void Report( SOURCEFILE *ps, int Level, char *fmt, ... );
 //
 // Returns 1 on success, 0 on error
 */
-int LabelChar( char c, int FlagFirstChar );
-
+int LabelChar(char c, int FlagFirstChar);
 
 /*
 // LabelCreate
@@ -467,8 +451,7 @@ int LabelChar( char c, int FlagFirstChar );
 //
 // Returns 1 on success, 0 on error
 */
-int LabelCreate( SOURCEFILE *ps, char *label, int value );
-
+int LabelCreate(SOURCEFILE *ps, char *label, int value);
 
 /*
 // LabelFind
@@ -477,8 +460,7 @@ int LabelCreate( SOURCEFILE *ps, char *label, int value );
 //
 // Returns LABEL * on success, 0 on error
 */
-LABEL *LabelFind( char *name );
-
+LABEL *LabelFind(char *name);
 
 /*
 // LabelDestroy
@@ -487,8 +469,7 @@ LABEL *LabelFind( char *name );
 //
 // void
 */
-void LabelDestroy( LABEL *pl );
-
+void LabelDestroy(LABEL *pl);
 
 /*
 // GenOp
@@ -500,16 +481,14 @@ void LabelDestroy( LABEL *pl );
 // pTerms  - Pointer to the terms
 // opcode  - Generated Opcode
 */
-void GenOp( SOURCEFILE *ps, int TermCnt, char **pTerms, uint opcode );
-
+void GenOp(SOURCEFILE *ps, int TermCnt, char **pTerms, uint opcode);
 
 /*
 // Check Name
 //
 // Returns 1 if the name is free, or 0 if it is in use
 */
-int CheckName( SOURCEFILE *ps, char *name );
-
+int CheckName(SOURCEFILE *ps, char *name);
 
 /*=======================================================================
 //
@@ -522,9 +501,7 @@ int CheckName( SOURCEFILE *ps, char *name );
 //
 // Returns 0 on success, <0 on error
 */
-int Expression( SOURCEFILE *ps, char *s, uint *pResult, int *pIndex );
-
-
+int Expression(SOURCEFILE *ps, char *s, uint *pResult, int *pIndex);
 
 /*=======================================================================
 //
@@ -540,7 +517,7 @@ int Expression( SOURCEFILE *ps, char *s, uint *pResult, int *pIndex );
 //
 // Returns 1 on success, 0 on error
 */
-SOURCEFILE *InitSourceFile( SOURCEFILE *pParent, char *filename );
+SOURCEFILE *InitSourceFile(SOURCEFILE *pParent, char *filename);
 
 /*
 // CloseSourceFile
@@ -549,7 +526,7 @@ SOURCEFILE *InitSourceFile( SOURCEFILE *pParent, char *filename );
 //
 // void
 */
-void CloseSourceFile( SOURCEFILE *ps );
+void CloseSourceFile(SOURCEFILE *ps);
 
 /*
 // GetSourceLine
@@ -563,7 +540,7 @@ void CloseSourceFile( SOURCEFILE *ps );
 //
 // Returns length of line, 0 on EOF, -1 on Error
 */
-int GetSourceLine( SOURCEFILE *ps, char *Dst, int MaxLen );
+int GetSourceLine(SOURCEFILE *ps, char *Dst, int MaxLen);
 
 /*
 // ppCleanup
@@ -574,7 +551,6 @@ int GetSourceLine( SOURCEFILE *ps, char *Dst, int MaxLen );
 */
 void ppCleanup();
 
-
 /*
 // EquateCreate
 //
@@ -584,8 +560,7 @@ void ppCleanup();
 */
 #define EQUATE_NAME_LEN TOKEN_MAX_LEN
 #define EQUATE_DATA_LEN 256
-int EquateCreate( SOURCEFILE *ps, char *Name, char *Value );
-
+int EquateCreate(SOURCEFILE *ps, char *Name, char *Value);
 
 /*
 // CheckEquate
@@ -594,8 +569,7 @@ int EquateCreate( SOURCEFILE *ps, char *Name, char *Value );
 //
 // Returns 1 on success, 0 on error
 */
-int CheckEquate( char *name );
-
+int CheckEquate(char *name);
 
 /*=======================================================================
 //
@@ -609,8 +583,7 @@ int CheckEquate( char *name );
 //    0 - Success
 //   -1 - Error
 */
-int MacroEnter( SOURCEFILE *ps, char *Name );
-
+int MacroEnter(SOURCEFILE *ps, char *Name);
 
 /*
 // ProcessMacro
@@ -623,8 +596,7 @@ int MacroEnter( SOURCEFILE *ps, char *Name );
 //      1 : Success
 //      0 : Error
 */
-int ProcessMacro( SOURCEFILE *ps, int TermCnt, char **pTerms );
-
+int ProcessMacro(SOURCEFILE *ps, int TermCnt, char **pTerms);
 
 /*
 // MacroCleanup
@@ -633,7 +605,6 @@ int ProcessMacro( SOURCEFILE *ps, int TermCnt, char **pTerms );
 */
 void MacroCleanup();
 
-
 /*
 // CheckMacro
 //
@@ -641,5 +612,4 @@ void MacroCleanup();
 //
 // Returns 1 on success, 0 on error
 */
-int CheckMacro( char *name );
-
+int CheckMacro(char *name);
