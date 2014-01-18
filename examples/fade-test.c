@@ -9,7 +9,7 @@
 #include <inttypes.h>
 #include <errno.h>
 #include <unistd.h>
-#include "ledscape.h"
+#include "../ledscape.h"
 
 
 int lumCorrection[] = {

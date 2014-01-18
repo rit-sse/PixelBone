@@ -9,7 +9,7 @@
 #include <inttypes.h>
 #include <errno.h>
 #include <unistd.h>
-#include "ledscape.h"
+#include "../ledscape.h"
 
 // Borrowed by OctoWS2811 rainbow test
 static unsigned int h2rgb(unsigned int v1, unsigned int v2, unsigned int hue) {
