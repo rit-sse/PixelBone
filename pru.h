@@ -5,6 +5,10 @@
 #ifndef _pru_h_
 #define _pru_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include <inttypes.h>
 #include "util.h"
@@ -42,4 +46,7 @@ extern void pru_close(pru_t *const pru);
 extern int pru_gpio(unsigned gpio, unsigned pin, unsigned direction,
                     const unsigned initial_value);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

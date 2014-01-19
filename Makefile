@@ -3,30 +3,15 @@
 # The top level targets link in the two .o files for now.
 #
 TARGETS += examples/rgb-test
-TARGETS += examples/fade-test
-TARGETS += examples/fire
-TARGETS += udp-rx
-TARGETS += opc-rx
+# TARGETS += examples/fade-test
+# TARGETS += examples/fire
+# TARGETS += network/udp-rx
+# TARGETS += network/opc-rx
 
-LEDSCAPE_OBJS = ledscape.o pru.o util.o
-LEDSCAPE_LIB := libledscape.a
+PIXELBONE_OBJS = pixelbone.o pru.o util.o
+PIXELBONE_LIB := libpixelbone.a
 
 all: $(TARGETS) ws281x.bin
-
-
-ifeq ($(shell uname -m),armv7l)
-# We are on the BeagleBone Black itself;
-# do not cross compile.
-export CROSS_COMPILE:=
-else
-# We are not on the BeagleBone and might be cross compiling.
-# If the environment does not set CROSS_COMPILE, set our
-# own.  Install a cross compiler with something like:
-#
-# sudo apt-get install gcc-arm-linux-gnueabi
-#
-export CROSS_COMPILE?=arm-linux-gnueabi-
-endif
 
 CFLAGS += \
 	-std=c99 \
@@ -44,11 +29,6 @@ LDFLAGS += \
 
 LDLIBS += \
 	-lpthread \
-
-COMPILE.o = $(CROSS_COMPILE)gcc $(CFLAGS) -c -o $@ $< 
-COMPILE.a = $(CROSS_COMPILE)gcc -c -o $@ $< 
-COMPILE.link = $(CROSS_COMPILE)gcc $(LDFLAGS) -o $@ $^ $(LDLIBS)
-
 
 #####
 #
@@ -76,13 +56,17 @@ PASM := $(PASM_DIR)/pasm
 	$(PASM) -V3 -b $<.i $(basename $@)
 	$(RM) $<.i
 
-%.o: %.c
-	$(COMPILE.o)
+%.o: %.cpp
+	$(CXX) -std=c++11 -c -o $@ $<
 
-$(foreach O,$(TARGETS),$(eval $O: $O.o $(LEDSCAPE_OBJS) $(APP_LOADER_LIB)))
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+
+$(foreach O,$(TARGETS),$(eval $O: $O.o $(PIXELBONE_OBJS) $(APP_LOADER_LIB)))
 
 $(TARGETS):
-	$(COMPILE.link)
+	$(CXX) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 
 .PHONY: clean
