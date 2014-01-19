@@ -3,12 +3,14 @@
 # The top level targets link in the two .o files for now.
 #
 TARGETS += examples/rgb-test
+TARGETS += examples/matrix-test
+TARGETS += examples/tile-test
 # TARGETS += examples/fade-test
 # TARGETS += examples/fire
 # TARGETS += network/udp-rx
 # TARGETS += network/opc-rx
 
-PIXELBONE_OBJS = pixelbone.o pru.o util.o
+PIXELBONE_OBJS = pixel.o gfx.o matrix.o pru.o util.o
 PIXELBONE_LIB := libpixelbone.a
 
 all: $(TARGETS) ws281x.bin
@@ -29,6 +31,8 @@ LDFLAGS += \
 
 LDLIBS += \
 	-lpthread \
+
+export CROSS_COMPILE:=
 
 #####
 #

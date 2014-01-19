@@ -9,7 +9,7 @@
 #include <cinttypes>
 #include <cerrno>
 //#include <unistd.h>
-#include "../pixelbone.hpp"
+#include "../pixel.hpp"
 
 // Gamma Correction Curve
 const uint8_t dim_curve[] = {
@@ -99,7 +99,7 @@ void HSBtoRGB(int hue, int sat, int val, uint8_t out[]) {
 
 int main(void) {
   const int num_pixels = 128;
-  PixelBone *const strip = new PixelBone(num_pixels);
+  PixelBone_Pixel *const strip = new PixelBone_Pixel(num_pixels);
   time_t last_time = time(NULL);
   unsigned last_i = 0;
   unsigned i = 0;
@@ -117,8 +117,7 @@ int main(void) {
     time_t now = time(NULL);
 
     if (now != last_time) {
-      printf("%d fps. starting %d previous %d \n", i - last_i, i,
-             response);
+      printf("%d fps. starting %d previous %d \n", i - last_i, i, response);
       last_i = i;
       last_time = now;
     }
@@ -130,8 +129,7 @@ int main(void) {
     i++;
   }
 
-  delete leds;
+  delete strip;
 
   return EXIT_SUCCESS;
 }
-

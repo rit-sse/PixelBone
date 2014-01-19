@@ -7,7 +7,6 @@
 
 #ifndef _pixelbone_hpp
 #define _pixelbone_hpp_
-
 #include "pru.h"
 
 /** LEDscape pixel format is BRGA.
@@ -15,12 +14,13 @@
  * data is laid out with BRGA format, since that is how it will
  * be translated during the clock out from the PRU.
  */
-typedef struct {
+struct pixel_t {
   uint8_t b;
   uint8_t r;
   uint8_t g;
   uint8_t a;
-} __attribute__((__packed__)) pixel_t;
+  pixel_t(uint8_t _r, uint8_t _g, uint8_t _b) : b(_b), r(_r), g(_g) {};
+} __attribute__((__packed__));
 
 /** Command structure shared with the PRU.
  *
@@ -46,7 +46,7 @@ typedef struct ws281x_command_t {
 
 } __attribute__((__packed__)) ws281x_command_t;
 
-class PixelBone {
+class PixelBone_Pixel {
   pru_t *pru0;
   uint16_t num_pixels;
   ws281x_command_t *ws281x;
@@ -54,17 +54,19 @@ class PixelBone {
   uint8_t current_buffer_num;
 
 public:
-  PixelBone(uint16_t pixel_count);
-  ~PixelBone();
+  PixelBone_Pixel(uint16_t pixel_count);
+  ~PixelBone_Pixel();
   void show(void);
   void setPixelColor(uint8_t n, uint8_t r, uint8_t g, uint8_t b);
-  void setPixelColor(uint8_t n, pixel_t c);
+  void setPixelColor(uint16_t n, uint32_t c);
+  void setPixel(uint8_t n, pixel_t c);
   void moveToNextBuffer();
   uint32_t wait();
   uint16_t numPixels() const;
   pixel_t *getCurrentBuffer() const;
   pixel_t *getPixel(uint16_t n) const;
-  static pixel_t Color(uint8_t r, uint8_t g, uint8_t b);
+  uint32_t getPixelColor(uint16_t n) const;
+  static uint32_t Color(uint8_t r, uint8_t g, uint8_t b);
 };
 
 #endif
