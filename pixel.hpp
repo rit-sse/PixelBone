@@ -22,6 +22,7 @@ struct pixel_t {
   pixel_t(uint8_t _r, uint8_t _g, uint8_t _b) : b(_b), r(_r), g(_g) {};
 } __attribute__((__packed__));
 
+
 /** Command structure shared with the PRU.
  *
  * This is mapped into the PRU data RAM and points to the
@@ -29,7 +30,7 @@ struct pixel_t {
  *
  * Changing this requires changes in ws281x.p
  */
-typedef struct ws281x_command_t {
+struct ws281x_command_t {
   // in the DDR shared with the PRU
   uintptr_t pixels_dma;
 
@@ -44,7 +45,7 @@ typedef struct ws281x_command_t {
   ws281x_command_t(unsigned _num_pixels)
       : pixels_dma(0), num_pixels(_num_pixels), command(0), response(0) {};
 
-} __attribute__((__packed__)) ws281x_command_t;
+} __attribute__((__packed__));
 
 class PixelBone_Pixel {
   pru_t *pru0;
