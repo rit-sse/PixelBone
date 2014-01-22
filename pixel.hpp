@@ -58,6 +58,7 @@ public:
   PixelBone_Pixel(uint16_t pixel_count);
   ~PixelBone_Pixel();
   void show(void);
+  void clear(void);
   void setPixelColor(uint8_t n, uint8_t r, uint8_t g, uint8_t b);
   void setPixelColor(uint16_t n, uint32_t c);
   void setPixel(uint8_t n, pixel_t c);

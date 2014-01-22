@@ -116,3 +116,9 @@ uint32_t PixelBone_Pixel::wait() {
     }
   }
 }
+
+void PixelBone_Pixel::clear() {
+  for ( int i = 0; i < num_pixels; i++ ) {
+    this->setPixelColor(i, 0, 0, 0);
+  }
+}
