@@ -49,7 +49,7 @@ struct ws281x_command_t {
 
 class PixelBone_Pixel {
   pru_t *pru0;
-  uint16_t num_pixels;
+  uint32_t num_pixels;
   ws281x_command_t *ws281x;
   size_t buffer_size;
   uint8_t current_buffer_num;
@@ -59,15 +59,15 @@ public:
   ~PixelBone_Pixel();
   void show(void);
   void clear(void);
-  void setPixelColor(uint8_t n, uint8_t r, uint8_t g, uint8_t b);
-  void setPixelColor(uint16_t n, uint32_t c);
-  void setPixel(uint8_t n, pixel_t c);
+  void setPixelColor(uint32_t n, uint8_t r, uint8_t g, uint8_t b);
+  void setPixelColor(uint32_t n, uint32_t c);
+  void setPixel(uint32_t n, pixel_t c);
   void moveToNextBuffer();
   uint32_t wait();
-  uint16_t numPixels() const;
+  uint32_t numPixels() const;
   pixel_t *getCurrentBuffer() const;
-  pixel_t *getPixel(uint16_t n) const;
-  uint32_t getPixelColor(uint16_t n) const;
+  pixel_t *getPixel(uint32_t n) const;
+  uint32_t getPixelColor(uint32_t n) const;
   static uint32_t Color(uint8_t red, uint8_t green, uint8_t blue);
   static uint32_t HSB(uint8_t hue, uint8_t saturation, uint8_t brightness);
 private:

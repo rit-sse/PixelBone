@@ -5,6 +5,7 @@
 TARGETS += examples/rgb-test
 TARGETS += examples/matrix-test
 TARGETS += examples/tile-test
+TARGETS += examples/scroll
 # TARGETS += examples/fade-test
 # TARGETS += examples/fire
 # TARGETS += network/udp-rx

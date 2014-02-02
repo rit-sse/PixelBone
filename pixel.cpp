@@ -49,14 +49,14 @@ void PixelBone_Pixel::moveToNextBuffer() {
   ++current_buffer_num %= 2;
 };
 
-uint16_t PixelBone_Pixel::numPixels() const { return num_pixels; }
+uint32_t PixelBone_Pixel::numPixels() const { return num_pixels; }
 
 /** Retrieve one of the two frame buffers. */
 pixel_t *PixelBone_Pixel::getCurrentBuffer() const {
   return (pixel_t *)((uint8_t *)pru0->ddr + buffer_size * current_buffer_num);
 }
 
-pixel_t *PixelBone_Pixel::getPixel(uint16_t n) const {
+pixel_t *PixelBone_Pixel::getPixel(uint32_t n) const {
   return &getCurrentBuffer()[n];
 }
 
@@ -115,7 +115,7 @@ uint32_t PixelBone_Pixel::HSB(uint8_t h, uint8_t s, uint8_t l) {
 
 
 // Query color from previously-set pixel (returns packed 32-bit RGB value)
-uint32_t PixelBone_Pixel::getPixelColor(uint16_t n) const {
+uint32_t PixelBone_Pixel::getPixelColor(uint32_t n) const {
   if (n < num_pixels) {
     pixel_t *const p = getPixel(n);
     return Color(p->r, p->g, p->b);
@@ -124,7 +124,7 @@ uint32_t PixelBone_Pixel::getPixelColor(uint16_t n) const {
 }
 
 // Set pixel color from separate R,G,B components:
-void PixelBone_Pixel::setPixelColor(uint8_t n, uint8_t r, uint8_t g,
+void PixelBone_Pixel::setPixelColor(uint32_t n, uint8_t r, uint8_t g,
                                     uint8_t b) {
   if (n < num_pixels) {
     // if(brightness) { // See notes in setBrightness()
@@ -140,7 +140,7 @@ void PixelBone_Pixel::setPixelColor(uint8_t n, uint8_t r, uint8_t g,
 }
 
 // Set pixel color from 'packed' 32-bit RGB color:
-void PixelBone_Pixel::setPixelColor(uint16_t n, uint32_t c) {
+void PixelBone_Pixel::setPixelColor(uint32_t n, uint32_t c) {
   if (n < num_pixels) {
     uint8_t r = (uint8_t)(c >> 16);
     uint8_t g = (uint8_t)(c >> 8);
@@ -149,7 +149,7 @@ void PixelBone_Pixel::setPixelColor(uint16_t n, uint32_t c) {
   }
 }
 
-void PixelBone_Pixel::setPixel(uint8_t n, pixel_t p) {
+void PixelBone_Pixel::setPixel(uint32_t n, pixel_t p) {
   memcpy(getPixel(n), &p, sizeof(pixel_t));
   // setPixelColor(n, p.r, p.g, p.b);
 }

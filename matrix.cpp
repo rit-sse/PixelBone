@@ -168,7 +168,7 @@ void PixelBone_Matrix::drawPixel(int16_t x, int16_t y, uint16_t color) {
 }
 
 void PixelBone_Matrix::fillScreen(uint16_t color) {
-  uint16_t i, n;
+  uint32_t i, n;
   uint32_t c24;
 
   c24 = expandColor(color);
