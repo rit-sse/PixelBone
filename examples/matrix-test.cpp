@@ -20,15 +20,15 @@ int main() {
   MATRIX_ROWS + MATRIX_ZIGZAG);
   
   matrix.setTextWrap(false);
-  matrix.setTextColor(matrix.Color(128,128,128));
+  matrix.setTextColor(matrix.Color(128, 128, 128));
 
   int x = 0;
   while (1) {
     matrix.fillScreen(0);
-    matrix.setCursor(x,0);
+    matrix.setCursor(x, 0);
     matrix.print("Howdy");
 
-    if (--x  < -36)
+    if (--x < -36)
       x = matrix.width();
 
     matrix.show();

@@ -29,7 +29,8 @@ public:
                         uint16_t color);
   virtual void fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
                         uint16_t color);
-  virtual void fillScreen(uint16_t color), invertDisplay(bool i);
+  virtual void fillScreen(uint16_t color);
+  virtual void invertDisplay(bool i);
 
   // These exist only with Adafruit_GFX (no subclass overrides)
   void drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
@@ -50,9 +51,12 @@ public:
                   int16_t h, uint16_t color);
   void drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color,
                 uint16_t bg, uint8_t size);
-  void setCursor(int16_t x, int16_t y), setTextColor(uint16_t c);
-  void setTextColor(uint16_t c, uint16_t bg), setTextSize(uint8_t s);
-  void setTextWrap(bool w), setRotation(uint8_t r);
+  void setCursor(int16_t x, int16_t y);
+  void setTextColor(uint16_t c);
+  void setTextColor(uint16_t c, uint16_t bg);
+  void setTextSize(uint8_t s);
+  void setTextWrap(bool w);
+  void setRotation(uint8_t r);
 
   void print(const std::string &s);
   void print(const char str[]);
@@ -60,8 +64,8 @@ public:
   void write(const uint8_t *buffer, size_t size);
   virtual void write(uint8_t);
 
-  int16_t height(void), width(void);
-
+  int16_t height(void);
+  int16_t width(void);
   uint8_t getRotation(void);
 
 protected:

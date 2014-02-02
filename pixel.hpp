@@ -5,7 +5,7 @@
  * Allows easy double buffering of frames.
  */
 
-#ifndef _pixelbone_hpp
+#ifndef _pixelbone_hpp_
 #define _pixelbone_hpp_
 #include "pru.h"
 
@@ -21,7 +21,6 @@ struct pixel_t {
   uint8_t a;
   pixel_t(uint8_t _r, uint8_t _g, uint8_t _b) : b(_b), r(_r), g(_g) {};
 } __attribute__((__packed__));
-
 
 /** Command structure shared with the PRU.
  *
@@ -53,6 +52,7 @@ class PixelBone_Pixel {
   ws281x_command_t *ws281x;
   size_t buffer_size;
   uint8_t current_buffer_num;
+  uint8_t brightness;
 
 public:
   PixelBone_Pixel(uint16_t pixel_count);
@@ -69,7 +69,8 @@ public:
   pixel_t *getPixel(uint32_t n) const;
   uint32_t getPixelColor(uint32_t n) const;
   static uint32_t Color(uint8_t red, uint8_t green, uint8_t blue);
-  static uint32_t HSB(uint8_t hue, uint8_t saturation, uint8_t brightness);
+  static uint32_t HSB(uint16_t hue, uint8_t saturation, uint8_t brightness);
+
 private:
   static uint8_t h2rgb(uint8_t v1, uint8_t v2, uint8_t hue);
 };
