@@ -15,9 +15,6 @@ int main(void) {
     for (uint32_t p = 0; p < num_pixels; p++) {
       strip->clear();
       strip->setPixelColor(p, PixelBone_Pixel::Color(128, 128, 128));
-      // wait for the previous frame to finish;
-      const uint32_t response = strip->wait();
-
       strip->show();
     }
   }
