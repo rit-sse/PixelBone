@@ -89,7 +89,7 @@ However, the TI AM335x ARM Cortex-A8 in the BeagleBone has two programmable "mic
 
 The frames are stored in memory as a series of 4-byte pixels in the order GRBA.  This means that it looks like this in RAM:
 
-	`S0P0 S0P1 S0P2 ... etc`
+`S0P0 S0P1 S0P2 ... etc`
 
 4 * 32 * length bytes are required per frame buffer.  The maximum frame rate also depends on the length.
 
