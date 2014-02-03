@@ -4,6 +4,11 @@
 #ifndef _util_h_
 #define _util_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -41,5 +46,9 @@ extern int serial_open(const char *const dev);
  */
 extern ssize_t write_all(const int fd, const void *const buf_ptr,
                          const size_t len);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
