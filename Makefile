@@ -62,7 +62,7 @@ PASM := $(PASM_DIR)/pasm
 	$(RM) $<.i
 
 %.o: %.cpp
-	$(CXX) -std=c++11 -c -o $@ $<
+	$(CXX) $(CXXFLAGS) -std=c++11 -c -o $@ $<
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
@@ -71,7 +71,7 @@ PASM := $(PASM_DIR)/pasm
 $(foreach O,$(TARGETS),$(eval $O: $O.o $(PIXELBONE_OBJS) $(APP_LOADER_LIB)))
 
 $(TARGETS):
-	$(CXX) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 
 .PHONY: clean
