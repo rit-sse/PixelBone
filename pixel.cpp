@@ -4,6 +4,7 @@
 
 /* GPIO pins used */
 static const uint8_t gpios0 = 2;
+static const uint8_t gpios1 = 3;
 
 PixelBone_Pixel::PixelBone_Pixel(uint16_t pixel_count)
     : pru0(pru_init(0)), num_pixels(pixel_count),
@@ -13,10 +14,11 @@ PixelBone_Pixel::PixelBone_Pixel(uint16_t pixel_count)
         pru0->ddr_size);
 
   ws281x = (ws281x_command_t *)pru0->data_ram;
-  *(ws281x) = ws281x_command_t((unsigned)pixel_count);
+  *(ws281x) = ws281x_command_t((unsigned)pixel_count/2);
 
   // Configure all of our output pins.
   pru_gpio(0, gpios0, 1, 0);
+  pru_gpio(0, gpios1, 1, 0);
 
   // Initiate the PRU0 program
   pru_exec(pru0, "./ws281x.bin");

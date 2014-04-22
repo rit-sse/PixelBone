@@ -53,9 +53,12 @@
 
 // Pins in GPIO0
 #define gpio0_bit0 2
+#define gpio0_bit1 3
+
 
 #define GPIO0_LED_MASK (0\
 |(1<<gpio0_bit0)\
+|(1<<gpio0_bit1)\
 )
 
 /** Register map */
@@ -67,8 +70,9 @@
 #define addr_reg r8
 #define temp_reg r9
 #define temp2_reg r27
+#define data_offset r28
 // r10 - r26 are used for temp storage and bitmap processing
-
+	
 
 /** Sleep a given number of nanoseconds with 10 ns resolution.
  *
@@ -121,6 +125,21 @@ lab:
 	LBBO sleep_counter, addr_reg, 0xC, 4
 .endm
 
+// The layout for the command struct
+.struct CmdDesc
+	.u32 pixels_dma
+	.u32 num_pixels
+	.u32 command
+	.u32 response
+.ends
+
+.struct PixelDesc
+	.u8 b
+	.u8 r
+	.u8 g
+	.u8 a
+.ends
+	
 START:
     // Enable OCP master port
     // clear the STANDBY_INIT bit in the SYSCFG register,
@@ -135,14 +154,15 @@ START:
     // 0x00012000 (PRU shared RAM).
     MOV		r0, 0x00000120
     MOV		r1, CTPPR_0
-    ST32	r0, r1
+    SBBO    r0, r1, 0, 4
 
     // Configure the programmable pointer register for PRU0 by setting
     // c31_pointer[15:0] field to 0x0010.  This will make C31 point to
     // 0x80001000 (DDR memory).
     MOV		r0, 0x00100000
     MOV		r1, CTPPR_1
-    ST32	r0, r1
+    SBBO    r0, r1, 0, 4
+
 
     // Write a 0x1 into the response field so that they know we have started
     MOV r2, #0x1
@@ -155,12 +175,15 @@ START:
     // that we have a rendered frame ready to clock out.  This also
     // handles the exit case if an invalid value is written to the start
     // start position.
+	.assign CmdDesc, r0, r3, Cmd
+	
 _LOOP:
     // Load the pointer to the buffer from PRU DRAM into r0 and the
     // length (in bytes-bit words) into r1.
     // start command into r2
     LBCO      data_addr, CONST_PRUDRAM, 0, 12
-
+	LSL       data_offset, data_len, 2 
+	
     // Wait for a non-zero command
     QBEQ _LOOP, r2, #0
 
@@ -171,7 +194,7 @@ _LOOP:
     // This allows maximum speed frame drawing since they know that they
     // can now swap the frame buffer pointer and write a new start command.
     MOV r3, 0
-    SBCO r3, CONST_PRUDRAM, 8, 4
+    SBCO r3, CONST_PRUDRAM, OFFSET(CmdDesc.command), SIZE(CmdDesc.command)
 
     // Command of 0xFF is the signal to exit
     QBEQ EXIT, r2, #0xFF
@@ -193,10 +216,13 @@ WORD_LOOP:
 			gpioN##_##regN##_skip: ; \
 
 		// Load 1 register of data, starting at r10
-		LBBO r10, r0, 0, 4
+		LBBO r10, data_addr, 0, 4
+	    LBBO r11, data_addr, data_offset, 4
+
 		MOV gpio0_zeros, 0
 
 		TEST_BIT(r10, gpio0, bit0)
+		TEST_BIT(r11, gpio0, bit1)
 
 		// Load the address(es) of the GPIO devices
 		MOV r20, GPIO0_LED_MASK
@@ -250,7 +276,7 @@ WORD_LOOP:
     // long it took to write out.
     MOV r8, 0x22000 // control register
     LBBO r2, r8, 0xC, 4
-    SBCO r2, CONST_PRUDRAM, 12, 4
+    SBCO r2, CONST_PRUDRAM, OFFSET(CmdDesc.response), SIZE(CmdDesc.response)
 
     // Go back to waiting for the next frame buffer
     QBA _LOOP
@@ -258,7 +284,7 @@ WORD_LOOP:
 EXIT:
     // Write a 0xFF into the response field so that they know we're done
     MOV r2, #0xFF
-    SBCO r2, CONST_PRUDRAM, 12, 4
+    SBCO r2, CONST_PRUDRAM, OFFSET(CmdDesc.response), SIZE(CmdDesc.response)
 
 #ifdef AM33XX
     // Send notification to Host for program completion
