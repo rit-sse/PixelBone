@@ -62,7 +62,7 @@ The mapping from PixelBone channel to BeagleBone GPIO pin:
 	  8    15                   16
 	  9    17                   18
 	  10   19                   20
-	  11   21            [0]    22
+	  11   21    [1]     [0]    22
 	  12   23                   24
 	  13   25                   26
 	  14   27                   28
