@@ -88,7 +88,7 @@ void pru_exec(pru_t *const pru, const char *const program) {
 void pru_close(pru_t *const pru) {
   // \todo unmap memory
   prussdrv_pru_wait_event(PRU_EVTOUT_0);
-  prussdrv_pru_clear_event(PRU0_ARM_INTERRUPT);
+  prussdrv_pru_clear_event(PRU_EVTOUT_0, PRU0_ARM_INTERRUPT);
   prussdrv_pru_disable(pru->pru_num);
   prussdrv_exit();
 }
