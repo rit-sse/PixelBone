@@ -53,12 +53,13 @@ static uint32_t expandColor(uint16_t color) {
          pgm_read_byte(&gamma5[color & 0x1F]);
 }
 
-// Downgrade 24-bit color to 16-bit (add reverse gamma lookup here?)
+// Downgrade 24-bit color to 16-bit 
+// TODO:(add reverse gamma lookup here?)
 uint16_t PixelBone_Matrix::Color(uint8_t r, uint8_t g, uint8_t b) {
   return ((uint16_t)(r & 0xF8) << 8) | ((uint16_t)(g & 0xFC) << 3) | (b >> 3);
 }
 
-void PixelBone_Matrix::drawPixel(int16_t x, int16_t y, uint16_t color) {
+int PixelBone_Matrix::getOffset(int16_t x, int16_t y) {
 
   if ((x < 0) || (y < 0) || (x >= _width) || (y >= _height))
     return;
@@ -163,8 +164,15 @@ void PixelBone_Matrix::drawPixel(int16_t x, int16_t y, uint16_t color) {
         pixelOffset = major * majorScale + minor;
     }
   }
+  return (tileOffset + pixelOffset);
+}
 
-  setPixelColor(tileOffset + pixelOffset, expandColor(color));
+void PixelBone_Matrix::drawPixel(int16_t x, int16_t y, uint16_t color) {
+  setPixelColor(getOffset(x,y), expandColor(color));
+}
+
+uint16_t getPixel(int16_t x, int16_t y) {
+  return getPixelColor(getOffset(x,y));
 }
 
 void PixelBone_Matrix::fillScreen(uint16_t color) {

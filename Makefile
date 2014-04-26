@@ -80,7 +80,7 @@ clean:
 	rm -rf \
 		**/*.o \
 		*.o \
-		*.i \
+		ws281x.hp.i \
 		.*.o.d \
 		*~ \
 		$(INCDIR_APP_LOADER)/*~ \
