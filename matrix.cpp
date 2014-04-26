@@ -171,8 +171,12 @@ void PixelBone_Matrix::drawPixel(int16_t x, int16_t y, uint16_t color) {
   setPixelColor(getOffset(x,y), expandColor(color));
 }
 
-uint16_t getPixel(int16_t x, int16_t y) {
-  return getPixelColor(getOffset(x,y));
+uint16_t PixelBone_Matrix::getPixelColor(int16_t x, int16_t y) {
+  uint32_t color = PixelBone_Pixel::getPixelColor(getOffset(x,y));
+  uint8_t r = (uint8_t) (color & 0xFF);         // first 8 bits
+  uint8_t g = (uint8_t) ((color >> 8) & 0xFF);  // second 8 bits
+  uint8_t b = (uint8_t) ((color >> 16) & 0xFF); // third 8 bits 
+  return PixelBone_Matrix::Color(r,g,b);
 }
 
 void PixelBone_Matrix::fillScreen(uint16_t color) {
