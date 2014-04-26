@@ -4,19 +4,10 @@
 #include "../matrix.hpp"
 
 #define HEIGHT 8
-#define WIDTH 16 
+#define WIDTH 16
 
 #define DIGIT_WIDTH 2
 #define DIGIT_HEIGHT 2
-
-#define X_OFF DIGIT_WIDTH / 10
-#define Y_OFF DIGIT_HEIGHT / 10
-
-#define ROWS 4
-#define COLS 6
-
-//#define WIDTH DIGIT_WIDTH *COLS + X_OFF
-//#define HEIGHT DIGIT_HEIGHT *ROWS + Y_OFF
 
 const uint16_t color_hour = PixelBone_Matrix::Color(0x00, 0xff, 0xff);
 const uint16_t color_min = PixelBone_Matrix::Color( 0x00, 0xf0, 0x00);
@@ -42,7 +33,6 @@ void draw_clock(PixelBone_Matrix *matrix,  tm *t) {
       matrix->drawRect(x, y, DIGIT_WIDTH, DIGIT_HEIGHT, color_hour);
     } else {
       matrix->drawRect(x, y, DIGIT_WIDTH, DIGIT_HEIGHT, color_empty);
-
     }
     y -= DIGIT_HEIGHT;
     tmp >>= 1;
@@ -54,10 +44,11 @@ void draw_clock(PixelBone_Matrix *matrix,  tm *t) {
 
   /* Draw hour (second digit). */
   while (tmp != 0) {
-    if (tmp % 2 == 1)
+    if (tmp % 2 == 1) {
       matrix->drawRect(x, y, DIGIT_WIDTH, DIGIT_HEIGHT, color_hour);
-    else
+    } else {
       matrix->drawRect(x, y, DIGIT_WIDTH, DIGIT_HEIGHT, color_empty);
+    }
     y -= DIGIT_HEIGHT;
     tmp >>= 1;
   }
@@ -68,10 +59,11 @@ void draw_clock(PixelBone_Matrix *matrix,  tm *t) {
 
   /* Draw minute (first digit). */
   while (tmp != 0) {
-    if (tmp % 2 == 1)
+    if (tmp % 2 == 1) {
       matrix->drawRect(x, y, DIGIT_WIDTH, DIGIT_HEIGHT, color_min);
-    else
+    } else {
       matrix->drawRect(x, y, DIGIT_WIDTH, DIGIT_HEIGHT, color_empty);
+    }
     y -= DIGIT_HEIGHT;
     tmp >>= 1;
   }
@@ -82,24 +74,26 @@ void draw_clock(PixelBone_Matrix *matrix,  tm *t) {
 
   /* Draw minute (second digit). */
   while (tmp != 0) {
-    if (tmp % 2 == 1)
+    if (tmp % 2 == 1) {
       matrix->drawRect(x, y, DIGIT_WIDTH, DIGIT_HEIGHT, color_min);
-    else
+    } else {
       matrix->drawRect(x, y, DIGIT_WIDTH, DIGIT_HEIGHT, color_empty);
+    }
     y -= DIGIT_HEIGHT;
     tmp >>= 1;
   }
-  
+
   x += DIGIT_WIDTH;
   y = HEIGHT - DIGIT_HEIGHT;
   tmp = t->tm_sec / 10;
 
   /* Draw second (first digit). */
   while (tmp != 0) {
-    if (tmp % 2 == 1)
+    if (tmp % 2 == 1) {
       matrix->drawRect(x, y, DIGIT_WIDTH, DIGIT_HEIGHT, color_sec);
-    else
+    } else {
       matrix->drawRect(x, y, DIGIT_WIDTH, DIGIT_HEIGHT, color_empty);
+    }
     y -= DIGIT_HEIGHT;
     tmp >>= 1;
   }
@@ -109,10 +103,11 @@ void draw_clock(PixelBone_Matrix *matrix,  tm *t) {
   tmp = t->tm_sec % 10;
   /* Draw second (second digit). */
   while (tmp != 0) {
-    if (tmp % 2 == 1)
+    if (tmp % 2 == 1) {
       matrix->drawRect(x, y, DIGIT_WIDTH, DIGIT_HEIGHT, color_sec);
-    else
+    } else {
       matrix->drawRect(x, y, DIGIT_WIDTH, DIGIT_HEIGHT, color_empty);
+    }
     y -= DIGIT_HEIGHT;
     tmp >>= 1;
   }
@@ -120,7 +115,7 @@ void draw_clock(PixelBone_Matrix *matrix,  tm *t) {
 
 int main(void) {
   PixelBone_Matrix* matrix = new PixelBone_Matrix(WIDTH,HEIGHT,
-                          MATRIX_TOP + MATRIX_LEFT + 
+                          MATRIX_TOP + MATRIX_LEFT +
                           MATRIX_ROWS + MATRIX_ZIGZAG);
 
   struct tm *now;
