@@ -1,4 +1,4 @@
-![Testing PixelBone](http://farm4.staticflickr.com/3834/9378678019_b706c55635_z.jpg)
+![Testing PixelBone](https://lh3.googleusercontent.com/-de4gV0F2_Gk/U1vb6bDet1I/AAAAAAAACJg/mGFfGTMWo4c/w1084-h813-no/IMG_20140426_121532.jpg)
 
 #DANGER!
 

@@ -3,195 +3,139 @@
 #define HEIGHT 4
 #define WIDTH 4
  
+const uint16_t BLANK = PixelBone_Matrix::Color(0,0,0);
+const uint16_t WHITE = PixelBone_Matrix::Color(255,255,255);
+
 struct Shape {
-public:
-  char xCoord;
-  char yCoord;
-  char height;
-  char width;
-  PixelBone_Matrix.Color **figure;
+  uint8_t xCoord;
+  uint8_t yCoord;
+  uint8_t height;
+  uint8_t width;
+  uint16_t **figure;
 };
  
 struct Glider : public Shape {
-  static const char GLIDER_SIZE = 3;
-  Glider( char x , char y );
+  static const uint8_t GLIDER_SIZE = 3;
+  Glider( uint8_t x , uint8_t y );
   ~Glider();
 };
  
 struct Blinker : public Shape {
-  static const char BLINKER_HEIGHT = 3;
-  static const char BLINKER_WIDTH = 1;
-  Blinker( char x , char y );
+  static const uint8_t BLINKER_HEIGHT = 3;
+  static const uint8_t BLINKER_WIDTH = 1;
+  Blinker( uint8_t x , uint8_t y );
   ~Blinker();
 };
  
 class GameOfLife {
+  PixelBone_Matrix world;
+  Shape shape;
 public:
   GameOfLife( Shape sh );
-  void print();
   void update();
-  char getState( char state , char xCoord , char yCoord , bool toggle);
+  uint8_t getState(uint16_t state , uint8_t xCoord , uint8_t yCoord);
   void iterate(unsigned int iterations);
-private:
-  PixelBone_Matrix world[HEIGHT][WIDTH];
-  char otherWorld[HEIGHT][WIDTH];
-  bool toggle;
-  Shape shape;
 };
  
 GameOfLife::GameOfLife( Shape sh ) :
-  shape(sh) ,
-  toggle(true) 
+    world(PixelBone_Matrix(WIDTH, HEIGHT)),
+    shape(sh) 
 {
-  for ( char i = 0; i < HEIGHT; i++ ) {
-    for ( char j = 0; j < WIDTH; j++ ) {
-      // world[i][j] = '.';
-      world.drawPixel(i,j,PixelBone_Matrix.Color(0,0,0));
-    }
-  }
-  for ( char i = shape.yCoord; i - shape.yCoord < shape.height; i++ ) {
-    for ( char j = shape.xCoord; j - shape.xCoord < shape.width; j++ ) {
+  world.clear();
+  for ( uint8_t i = shape.yCoord; i - shape.yCoord < shape.height; i++ ) {
+    for ( uint8_t j = shape.xCoord; j - shape.xCoord < shape.width; j++ ) {
       if ( i < HEIGHT && j < WIDTH ) {
-	world.drawPixel(i, j, shape.figure[ i - shape.yCoord ][j - shape.xCoord ]);
+        world.drawPixel(i, j, shape.figure[ i - shape.yCoord ][j - shape.xCoord ]);
       }
     }
   }
 }
- 
-void GameOfLife::print() {
-  // if ( toggle ) {
-  //   for ( char i = 0; i < HEIGHT; i++ ) {
-  //     for ( char j = 0; j < WIDTH; j++ ) {
-  // 	std::cout << world[i][j];
-  //     }
-  //     std::cout << std::endl;
-  //   }
-  // } else {
-  //   for ( char i = 0; i < HEIGHT; i++ ) {
-  //     for ( char j = 0; j < WIDTH; j++ ) {
-  // 	std::cout << otherWorld[i][j];
-  //     }
-  //     std::cout << std::endl;
-  //   }
-  // }
-  // for ( char i = 0; i < WIDTH; i++ ) {
-  //   std::cout << '=';
-  // }
-  // std::cout << std::endl;
-  matrix.show();
-}
- 
+
 void GameOfLife::update() {
-  // if (toggle) {
-  //   for ( char i = 0; i < HEIGHT; i++ ) {
-  //     for ( char j = 0; j < WIDTH; j++ ) {
-  //               otherWorld[i][j] = 
-  // 		  GameOfLife::getState(world[i][j] , i , j , toggle);
-  //     }
-  //   }
-  //   toggle = !toggle;
-  // } else {
-  //   for ( char i = 0; i < HEIGHT; i++ ) {
-  //     for ( char j = 0; j < WIDTH; j++ ) {
-  //               world[i][j] = 
-  // 		  GameOfLife::getState(otherWorld[i][j] , i , j , toggle);
-  //     }
-  //   }
-  //   toggle = !toggle;
-  // }
-  world.drawPixel(i, j, GameOfLife::getState(world.getPixelColor(
+  for (uint16_t i = 0; i < WIDTH; i++) {
+    for (uint16_t j = 0; j < HEIGHT; j++) {
+      world.drawPixel(i, j, GameOfLife::getState(world.getPixelColor(i, j), j, i));
+    }
+  }
+  world.moveToNextBuffer();
+
 }
  
-char GameOfLife::getState( char state, char yCoord, char xCoord, bool toggle ) {
-  char neighbors = 0;
-  if ( toggle ) {
-    for ( char i = yCoord - 1; i <= yCoord + 1; i++ ) {
-      for ( char j = xCoord - 1; j <= xCoord + 1; j++ ) {
-	if ( i == yCoord && j == xCoord ) {
-	  continue;
-	}
-	if ( i > -1 && i < HEIGHT && j > -1 && j < WIDTH ) {
-	  if ( world[i][j] == 'X' ) {
-	    neighbors++;
-	  }
-	}
+uint8_t GameOfLife::getState(uint16_t state, uint8_t yCoord, uint8_t xCoord) {
+  uint8_t neighbors = 0;
+  for ( int8_t i = yCoord - 1; i <= yCoord + 1; i++ ) {
+    for ( int8_t j = xCoord - 1; j <= xCoord + 1; j++ ) {
+      if ( i == yCoord && j == xCoord ) {
+        continue;
       }
-    }
-  } else {
-    for ( char i = yCoord - 1; i <= yCoord + 1; i++ ) {
-      for ( char j = xCoord - 1; j <= xCoord + 1; j++ ) {
-	if ( i == yCoord && j == xCoord ) {
-	  continue;
-	}
-	if ( i > -1 && i < HEIGHT && j > -1 && j < WIDTH ) {
-	  if ( otherWorld[i][j] == 'X' ) {
-	    neighbors++;
-	  }
-	}
+      if ( i > -1 && i < HEIGHT && j > -1 && j < WIDTH ) {
+        if ( world.getPixelColor(j, i) == WHITE) {
+          neighbors++;
+        }
       }
     }
   }
-  if (state == 'X') {
-    return ( neighbors > 1 && neighbors < 4 ) ? 'X' : '.';
+  if (state == WHITE) {
+    return ( neighbors > 1 && neighbors < 4 ) ? WHITE : BLANK;
   }
   else {
-    return ( neighbors == 3 ) ? 'X' : '.';
+    return ( neighbors == 3 ) ? WHITE : BLANK;
   }
 }
  
-void GameOfLife::iterate( unsigned int iterations ) {
-  for ( int i = 0; i < iterations; i++ ) {
-    print();
+void GameOfLife::iterate(uint iterations) {
+  for (uint i = 0; i < iterations; i++ ) {
+    world.show();
     update();
   }
 }
  
-Glider::Glider( char x , char y ) {
+Glider::Glider( uint8_t x , uint8_t y ) {
   xCoord = x;
   yCoord = y;
   height = GLIDER_SIZE;
   width = GLIDER_SIZE;
-  figure = new char*[GLIDER_SIZE];
-  for ( char i = 0; i < GLIDER_SIZE; i++ ) {
-    figure[i] = new char[GLIDER_SIZE];
+  figure = new uint16_t*[GLIDER_SIZE];
+  for ( uint8_t i = 0; i < GLIDER_SIZE; i++ ) {
+    figure[i] = new uint16_t[GLIDER_SIZE];
   }
-  for ( char i = 0; i < GLIDER_SIZE; i++ ) {
-    for ( char j = 0; j < GLIDER_SIZE; j++ ) {
-      figure[i][j] = '.';
+  for ( uint8_t i = 0; i < GLIDER_SIZE; i++ ) {
+    for ( uint8_t j = 0; j < GLIDER_SIZE; j++ ) {
+      figure[i][j] = BLANK;
     }
   }
-  figure[0][1] = 'X';
-  figure[1][2] = 'X';
-  figure[2][0] = 'X';
-  figure[2][1] = 'X';
-  figure[2][2] = 'X';
+  figure[0][1] = WHITE;
+  figure[1][2] = WHITE;
+  figure[2][0] = WHITE;
+  figure[2][1] = WHITE;
+  figure[2][2] = WHITE;
 }
  
 Glider::~Glider() {
-  for ( char i = 0; i < GLIDER_SIZE; i++ ) {
+  for ( uint8_t i = 0; i < GLIDER_SIZE; i++ ) {
     delete[] figure[i];
   }
   delete[] figure;
 }
  
-Blinker::Blinker( char x , char y ) {
+Blinker::Blinker( uint8_t x , uint8_t y ) {
   xCoord = x;
   yCoord = y;
   height = BLINKER_HEIGHT;
   width = BLINKER_WIDTH;
-  figure = new char*[BLINKER_HEIGHT];
-  for ( char i = 0; i < BLINKER_HEIGHT; i++ ) {
-    figure[i] = new char[BLINKER_WIDTH];
+  figure = new uint16_t*[BLINKER_HEIGHT];
+  for ( uint8_t i = 0; i < BLINKER_HEIGHT; i++ ) {
+    figure[i] = new uint16_t[BLINKER_WIDTH];
   }
-  for ( char i = 0; i < BLINKER_HEIGHT; i++ ) {
-    for ( char j = 0; j < BLINKER_WIDTH; j++ ) {
-      figure[i][j] = 'X';
+  for ( uint8_t i = 0; i < BLINKER_HEIGHT; i++ ) {
+    for ( uint8_t j = 0; j < BLINKER_WIDTH; j++ ) {
+      figure[i][j] = WHITE;
     }
   }
 }
  
 Blinker::~Blinker() {
-  for ( char i = 0; i < BLINKER_HEIGHT; i++ ) {
+  for ( uint8_t i = 0; i < BLINKER_HEIGHT; i++ ) {
     delete[] figure[i];
   }
   delete[] figure;
