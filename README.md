@@ -138,7 +138,7 @@ You can double buffer like this:
 const int num_pixels = 256;
 PixelBone_Pixel strip(num_pixels);
 
-while (1) {
+while (true) {
 	render(strip); //modify the pixels here
 
 	// wait for the previous frame to finish;

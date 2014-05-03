@@ -403,6 +403,8 @@ int main(int argc, char *argv[]) {
     }
   }
   setBufferedInput(true);
+  matrix.clear();
+  delete matrix;
 
   return EXIT_SUCCESS;
 }
