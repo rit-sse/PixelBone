@@ -69,10 +69,9 @@ public:
                    uint8_t matrixType = MATRIX_TOP + MATRIX_LEFT + MATRIX_ROWS +
                                         TILE_TOP + TILE_LEFT + TILE_ROWS);
 
-  static uint16_t Color(uint8_t r, uint8_t g, uint8_t b);
-  void drawPixel(int16_t x, int16_t y, uint16_t color);
+  void drawPixel(int16_t x, int16_t y, uint32_t color);
   uint16_t getPixelColor(int16_t x, int16_t y);
-  void fillScreen(uint16_t color);
+  void fillScreen(uint32_t color);
   void setRemapFunction(uint16_t (*fn)(uint16_t, uint16_t));
 
 

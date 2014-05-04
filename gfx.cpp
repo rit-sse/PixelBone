@@ -45,13 +45,13 @@ PixelBone_GFX::PixelBone_GFX(int16_t w, int16_t h) : WIDTH(w), HEIGHT(h) {
   rotation = 0;
   cursor_y = cursor_x = 0;
   textsize = 1;
-  textcolor = textbgcolor = 0xFFFF;
+  textcolor = textbgcolor = 0xFFFFFFFF;
   wrap = true;
 }
 
 // Draw a circle outline
 void PixelBone_GFX::drawCircle(int16_t x0, int16_t y0, int16_t r,
-                               uint16_t color) {
+                               uint32_t color) {
   int16_t f = 1 - r;
   int16_t ddF_x = 1;
   int16_t ddF_y = -2 * r;
@@ -85,7 +85,7 @@ void PixelBone_GFX::drawCircle(int16_t x0, int16_t y0, int16_t r,
 }
 
 void PixelBone_GFX::drawCircleHelper(int16_t x0, int16_t y0, int16_t r,
-                                     uint8_t cornername, uint16_t color) {
+                                     uint8_t cornername, uint32_t color) {
   int16_t f = 1 - r;
   int16_t ddF_x = 1;
   int16_t ddF_y = -2 * r;
@@ -121,7 +121,7 @@ void PixelBone_GFX::drawCircleHelper(int16_t x0, int16_t y0, int16_t r,
 }
 
 void PixelBone_GFX::fillCircle(int16_t x0, int16_t y0, int16_t r,
-                               uint16_t color) {
+                               uint32_t color) {
   drawFastVLine(x0, y0 - r, 2 * r + 1, color);
   fillCircleHelper(x0, y0, r, 3, 0, color);
 }
@@ -129,7 +129,7 @@ void PixelBone_GFX::fillCircle(int16_t x0, int16_t y0, int16_t r,
 // Used to do circles and roundrects
 void PixelBone_GFX::fillCircleHelper(int16_t x0, int16_t y0, int16_t r,
                                      uint8_t cornername, int16_t delta,
-                                     uint16_t color) {
+                                     uint32_t color) {
 
   int16_t f = 1 - r;
   int16_t ddF_x = 1;
@@ -160,7 +160,7 @@ void PixelBone_GFX::fillCircleHelper(int16_t x0, int16_t y0, int16_t r,
 
 // Bresenham's algorithm - thx wikpedia
 void PixelBone_GFX::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
-                             uint16_t color) {
+                             uint32_t color) {
   int16_t steep = std::abs(y1 - y0) > std::abs(x1 - x0);
   if (steep) {
     swap(x0, y0);
@@ -201,7 +201,7 @@ void PixelBone_GFX::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
 
 // Draw a rectangle
 void PixelBone_GFX::drawRect(int16_t x, int16_t y, int16_t w, int16_t h,
-                             uint16_t color) {
+                             uint32_t color) {
   drawFastHLine(x, y, w, color);
   drawFastHLine(x, y + h - 1, w, color);
   drawFastVLine(x, y, h, color);
@@ -209,32 +209,32 @@ void PixelBone_GFX::drawRect(int16_t x, int16_t y, int16_t w, int16_t h,
 }
 
 void PixelBone_GFX::drawFastVLine(int16_t x, int16_t y, int16_t h,
-                                  uint16_t color) {
+                                  uint32_t color) {
   // Update in subclasses if desired!
   drawLine(x, y, x, y + h - 1, color);
 }
 
 void PixelBone_GFX::drawFastHLine(int16_t x, int16_t y, int16_t w,
-                                  uint16_t color) {
+                                  uint32_t color) {
   // Update in subclasses if desired!
   drawLine(x, y, x + w - 1, y, color);
 }
 
 void PixelBone_GFX::fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
-                             uint16_t color) {
+                             uint32_t color) {
   // Update in subclasses if desired!
   for (int16_t i = x; i < x + w; i++) {
     drawFastVLine(i, y, h, color);
   }
 }
 
-void PixelBone_GFX::fillScreen(uint16_t color) {
+void PixelBone_GFX::fillScreen(uint32_t color) {
   fillRect(0, 0, _width, _height, color);
 }
 
 // Draw a rounded rectangle
 void PixelBone_GFX::drawRoundRect(int16_t x, int16_t y, int16_t w, int16_t h,
-                                  int16_t r, uint16_t color) {
+                                  int16_t r, uint32_t color) {
   // smarter version
   drawFastHLine(x + r, y, w - 2 * r, color);         // Top
   drawFastHLine(x + r, y + h - 1, w - 2 * r, color); // Bottom
@@ -249,7 +249,7 @@ void PixelBone_GFX::drawRoundRect(int16_t x, int16_t y, int16_t w, int16_t h,
 
 // Fill a rounded rectangle
 void PixelBone_GFX::fillRoundRect(int16_t x, int16_t y, int16_t w, int16_t h,
-                                  int16_t r, uint16_t color) {
+                                  int16_t r, uint32_t color) {
   // smarter version
   fillRect(x + r, y, w - 2 * r, h, color);
 
@@ -260,7 +260,7 @@ void PixelBone_GFX::fillRoundRect(int16_t x, int16_t y, int16_t w, int16_t h,
 
 // Draw a triangle
 void PixelBone_GFX::drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
-                                 int16_t x2, int16_t y2, uint16_t color) {
+                                 int16_t x2, int16_t y2, uint32_t color) {
   drawLine(x0, y0, x1, y1, color);
   drawLine(x1, y1, x2, y2, color);
   drawLine(x2, y2, x0, y0, color);
@@ -268,7 +268,7 @@ void PixelBone_GFX::drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
 
 // Fill a triangle
 void PixelBone_GFX::fillTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
-                                 int16_t x2, int16_t y2, uint16_t color) {
+                                 int16_t x2, int16_t y2, uint32_t color) {
 
   int16_t a, b, y, last;
 
@@ -348,7 +348,7 @@ void PixelBone_GFX::fillTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
 }
 
 void PixelBone_GFX::drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap,
-                               int16_t w, int16_t h, uint16_t color) {
+                               int16_t w, int16_t h, uint32_t color) {
 
   int16_t i, j, byteWidth = (w + 7) / 8;
 
@@ -394,7 +394,7 @@ void PixelBone_GFX::write(uint8_t c) {
 
 // Draw a character
 void PixelBone_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
-                             uint16_t color, uint16_t bg, uint8_t size) {
+                             uint32_t color, uint16_t bg, uint8_t size) {
 
   if ((x >= _width) ||            // Clip right
       (y >= _height) ||           // Clip bottom
@@ -434,13 +434,13 @@ void PixelBone_GFX::setCursor(int16_t x, int16_t y) {
 
 void PixelBone_GFX::setTextSize(uint8_t s) { textsize = (s > 0) ? s : 1; }
 
-void PixelBone_GFX::setTextColor(uint16_t c) {
+void PixelBone_GFX::setTextColor(uint32_t c) {
   // For 'transparent' background, we'll set the bg
   // to the same as fg instead of using a flag
   textcolor = textbgcolor = c;
 }
 
-void PixelBone_GFX::setTextColor(uint16_t c, uint16_t b) {
+void PixelBone_GFX::setTextColor(uint32_t c, uint32_t b) {
   textcolor = c;
   textbgcolor = b;
 }

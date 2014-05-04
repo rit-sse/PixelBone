@@ -20,7 +20,7 @@ int main() {
   MATRIX_ROWS + MATRIX_ZIGZAG);
   
   matrix.setTextWrap(false);
-  matrix.setTextColor(matrix.Color(128, 128, 128));
+  matrix.setTextColor(PixelBone_Pixel::Color(128, 128, 128));
 
   int x = 0;
   while (1) {

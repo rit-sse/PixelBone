@@ -35,7 +35,7 @@ int main() {
                           MATRIX_TOP + MATRIX_LEFT + MATRIX_ROWS + MATRIX_ZIGZAG);
 
   matrix.setTextWrap(false);
-  matrix.setTextColor(matrix.Color(0,50,0));
+  matrix.setTextColor(PixelBone_Pixel::Color(0,50,0));
 
   int x = 0;
   while (1) {
