@@ -45,19 +45,6 @@ PixelBone_Matrix::PixelBone_Matrix(uint8_t mW, uint8_t mH, uint8_t tX,
       type(matrixType), matrixWidth(mW), matrixHeight(mH), tilesX(tX),
       tilesY(tY), remapFn(NULL) {}
 
-// Expand 16-bit input color (PixelBone_GFX colorspace) to 24-bit (NeoPixel)
-// (w/gamma adjustment)
-static uint32_t expandColor(uint16_t color) {
-  return ((uint32_t)pgm_read_byte(&gamma5[color >> 11]) << 16) |
-         ((uint32_t)pgm_read_byte(&gamma6[(color >> 5) & 0x3F]) << 8) |
-         pgm_read_byte(&gamma5[color & 0x1F]);
-}
-
-// Downgrade 24-bit color to 16-bit 
-// TODO:(add reverse gamma lookup here?)
-uint16_t PixelBone_Matrix::Color(uint8_t r, uint8_t g, uint8_t b) {
-  return ((uint16_t)(r & 0xF8) << 8) | ((uint16_t)(g & 0xFC) << 3) | (b >> 3);
-}
 
 int PixelBone_Matrix::getOffset(int16_t x, int16_t y) {
 
@@ -164,29 +151,33 @@ int PixelBone_Matrix::getOffset(int16_t x, int16_t y) {
         pixelOffset = major * majorScale + minor;
     }
   }
-  return (tileOffset + pixelOffset);
+  int offset = (tileOffset + pixelOffset);
+  return offset;
 }
 
-void PixelBone_Matrix::drawPixel(int16_t x, int16_t y, uint16_t color) {
-  setPixelColor(getOffset(x,y), expandColor(color));
+void PixelBone_Matrix::drawPixel(int16_t x, int16_t y, uint32_t color) {
+  setPixelColor(getOffset(x,y), color);
 }
 
 uint16_t PixelBone_Matrix::getPixelColor(int16_t x, int16_t y) {
-  uint32_t color = PixelBone_Pixel::getPixelColor(getOffset(x,y));
-  uint8_t r = (uint8_t) (color & 0xFF);         // first 8 bits
-  uint8_t g = (uint8_t) ((color >> 8) & 0xFF);  // second 8 bits
-  uint8_t b = (uint8_t) ((color >> 16) & 0xFF); // third 8 bits 
-  return PixelBone_Matrix::Color(r,g,b);
+  // uint32_t color = expandColor(PixelBone_Pixel::getPixelColor(getOffset(x,y)));
+  // uint8_t r = (uint8_t) (color & 0xFF);         // first 8 bits
+  // uint8_t g = (uint8_t) ((color >> 8) & 0xFF);  // second 8 bits
+  // uint8_t b = (uint8_t) ((color >> 16) & 0xFF); // third 8 bits 
+
+  pixel_t *const p = PixelBone_Pixel::getPixel(getOffset(x,y));
+  // printf("Red color: 0x%x\n", p->r);
+  // printf("Green color: 0x%x\n", p->g);
+  // printf("Blue color: 0x%x\n", p->b);
+
+  return PixelBone_Matrix::Color(p->r, p->g, p->b);
 }
 
-void PixelBone_Matrix::fillScreen(uint16_t color) {
-  uint32_t i, n;
-  uint32_t c24;
+void PixelBone_Matrix::fillScreen(uint32_t color) {
+  uint32_t n = numPixels();
 
-  c24 = expandColor(color);
-  n = numPixels();
-  for (i = 0; i < n; i++)
-    setPixelColor(i, c24);
+  for (uint32_t i = 0; i < n; i++)
+    setPixelColor(i, color);
 }
 
 void PixelBone_Matrix::setRemapFunction(uint16_t (*fn)(uint16_t, uint16_t)) {

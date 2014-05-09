@@ -98,7 +98,7 @@ void HSBtoRGB(int hue, int sat, int val, uint8_t out[]) {
 }
 
 int main(void) {
-  const int num_pixels = 128;
+  const int num_pixels = 512;
   PixelBone_Pixel *const strip = new PixelBone_Pixel(num_pixels);
   time_t last_time = time(NULL);
   unsigned last_i = 0;

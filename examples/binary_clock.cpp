@@ -12,10 +12,10 @@
 #define DIGIT_WIDTH 4
 #define DIGIT_HEIGHT 4
 
-const uint16_t color_hour = PixelBone_Matrix::Color(0x00, 0xff, 0xff);
-const uint16_t color_min = PixelBone_Matrix::Color( 0x00, 0xf0, 0x00);
-const uint16_t color_sec = PixelBone_Matrix::Color( 0xff, 0xff, 0x00);
-const uint16_t color_empty = PixelBone_Matrix::Color( 0x00, 0x00, 0x00);
+const uint16_t color_hour = PixelBone_Pixel::Color(0x00, 0xff, 0xff);
+const uint16_t color_min = PixelBone_Pixel::Color( 0x00, 0xf0, 0x00);
+const uint16_t color_sec = PixelBone_Pixel::Color( 0xff, 0xff, 0x00);
+const uint16_t color_empty = PixelBone_Pixel::Color( 0x00, 0x00, 0x00);
 
 
 void draw_clock(PixelBone_Matrix *matrix,  tm *t) {

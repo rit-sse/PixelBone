@@ -1,10 +1,10 @@
 #include <iostream>
 #include "../matrix.hpp"
-#define HEIGHT 4
-#define WIDTH 4
+#define HEIGHT 8
+#define WIDTH 64
  
-const uint16_t BLANK = PixelBone_Matrix::Color(0,0,0);
-const uint16_t WHITE = PixelBone_Matrix::Color(255,255,255);
+const uint16_t BLANK = PixelBone_Pixel::Color(0,0,0);
+const uint16_t WHITE = PixelBone_Pixel::Color(255,255,255);
 
 struct Shape {
   uint8_t xCoord;
@@ -28,37 +28,42 @@ struct Blinker : public Shape {
 };
  
 class GameOfLife {
-  PixelBone_Matrix world;
-  Shape shape;
 public:
+  PixelBone_Matrix* world;
+  Shape shape;
   GameOfLife( Shape sh );
+  ~GameOfLife();
   void update();
   uint8_t getState(uint16_t state , uint8_t xCoord , uint8_t yCoord);
   void iterate(unsigned int iterations);
 };
  
 GameOfLife::GameOfLife( Shape sh ) :
-    world(PixelBone_Matrix(WIDTH, HEIGHT)),
     shape(sh) 
 {
-  world.clear();
-  for ( uint8_t i = shape.yCoord; i - shape.yCoord < shape.height; i++ ) {
-    for ( uint8_t j = shape.xCoord; j - shape.xCoord < shape.width; j++ ) {
+  world = new PixelBone_Matrix(16, 8, 4, 1, MATRIX_TOP + MATRIX_LEFT + MATRIX_ROWS + MATRIX_ZIGZAG + TILE_TOP + TILE_LEFT + TILE_ROWS);
+  world->clear();
+
+  for ( int i = shape.yCoord; i - shape.yCoord < shape.height; i++ ) {
+    for ( int j = shape.xCoord; j - shape.xCoord < shape.width; j++ ) {
       if ( i < HEIGHT && j < WIDTH ) {
-        world.drawPixel(i, j, shape.figure[ i - shape.yCoord ][j - shape.xCoord ]);
+        world->drawPixel(j, i, shape.figure[ i - shape.yCoord ][j - shape.xCoord ]);
       }
     }
   }
+  world->show();
+}
+
+GameOfLife::~GameOfLife(){
+  delete world;
 }
 
 void GameOfLife::update() {
   for (uint16_t i = 0; i < WIDTH; i++) {
     for (uint16_t j = 0; j < HEIGHT; j++) {
-      world.drawPixel(i, j, GameOfLife::getState(world.getPixelColor(i, j), j, i));
+      world->drawPixel(i, j, GameOfLife::getState(world->getPixelColor(i, j), j, i));
     }
   }
-  world.moveToNextBuffer();
-
 }
  
 uint8_t GameOfLife::getState(uint16_t state, uint8_t yCoord, uint8_t xCoord) {
@@ -69,7 +74,7 @@ uint8_t GameOfLife::getState(uint16_t state, uint8_t yCoord, uint8_t xCoord) {
         continue;
       }
       if ( i > -1 && i < HEIGHT && j > -1 && j < WIDTH ) {
-        if ( world.getPixelColor(j, i) == WHITE) {
+        if ( world->getPixelColor(j, i) == WHITE) {
           neighbors++;
         }
       }
@@ -85,8 +90,12 @@ uint8_t GameOfLife::getState(uint16_t state, uint8_t yCoord, uint8_t xCoord) {
  
 void GameOfLife::iterate(uint iterations) {
   for (uint i = 0; i < iterations; i++ ) {
-    world.show();
     update();
+    if (getchar() == ' '){
+    world->show();
+    world->wait();
+    }
+    //world->moveToNextBuffer();
   }
 }
  
@@ -144,9 +153,9 @@ Blinker::~Blinker() {
 int main() {
   Glider glider(0,0);
   GameOfLife gol(glider);
-  gol.iterate(5);
-  Blinker blinker(1,0);
-  GameOfLife gol2(blinker);
-  gol2.iterate(4);
+  gol.iterate(20);
+  // Blinker blinker(1,0);
+  // GameOfLife gol2(blinker);
+  // gol2.iterate(4);
 }
  

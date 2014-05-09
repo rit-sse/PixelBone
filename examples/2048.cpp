@@ -17,27 +17,33 @@
 
 #define SIZE 4
 
+#define BLOCK_WIDTH 4
+#define BLOCK_HEIGHT 2
+
+#define BOARD_HEIGHT 8
+#define BOARD_WIDTH 16
+
 uint32_t score = 0;
 
 uint16_t getColor(uint16_t value) {
   if (value == 2) {
-    return PixelBone_Matrix::Color(238, 228, 218);
+    return PixelBone_Matrix::Color(221, 221, 221);
   } else if (value == 4) {
-    return PixelBone_Matrix::Color(237, 224, 200);
+    return PixelBone_Matrix::Color(152, 95, 168);
   } else if (value == 8) {
-    return PixelBone_Matrix::Color(242, 177, 121);
+    return PixelBone_Matrix::Color(120, 197, 213);
   } else if (value == 16) {
-    return PixelBone_Matrix::Color(245, 149, 99);
+    return PixelBone_Matrix::Color(121, 194, 104);
   } else if (value == 32) {
-    return PixelBone_Matrix::Color(246, 124, 95);
+    return PixelBone_Matrix::Color(197, 215, 71);
   } else if (value == 64) {
-    return PixelBone_Matrix::Color(246, 94, 59);
+    return PixelBone_Matrix::Color(245, 214, 61);
   } else if (value == 128) {
-    return PixelBone_Matrix::Color(237, 207, 114);
+    return PixelBone_Matrix::Color(241, 140, 50);
   } else if (value == 256) {
-    return PixelBone_Matrix::Color(237, 204, 97);
+    return PixelBone_Matrix::Color(232, 104, 161);
   } else if (value == 512) {
-    return PixelBone_Matrix::Color(237, 200, 80);
+    return PixelBone_Matrix::Color(191, 99, 166);
   } else if (value == 1024) {
     return PixelBone_Matrix::Color(237, 197, 63);
   } else if (value == 2048) {
@@ -48,17 +54,17 @@ uint16_t getColor(uint16_t value) {
 }
 
 void drawBoard(PixelBone_Matrix &matrix, uint16_t board[SIZE][SIZE]) {
-  // matrix.drawPixel(2,2, PixelBone_Matrix::Color(255,255,255));
-  // matrix.show();
   matrix.clear();
   for (int16_t y = 0; y < SIZE; y++) {
     for (int16_t x = 0; x < SIZE; x++) {
       uint16_t color = getColor(board[x][y]);
-      matrix.fillRect(x * 4, y * 4, 4, 4, color);
-      // printf("(%d, %d): %d ->  %x\n", x, y, board[x][y],  color);
+      matrix.fillRect(x * BLOCK_WIDTH, y * BLOCK_HEIGHT, 
+                      BLOCK_WIDTH, BLOCK_HEIGHT, color);
     }
   }
+  matrix.wait();
   matrix.show();
+  matrix.moveToNextBuffer();
 }
 
 int8_t findTarget(uint16_t array[SIZE], int8_t x, int8_t stop) {
@@ -317,12 +323,11 @@ int main(int argc, char *argv[]) {
   uint16_t board[SIZE][SIZE];
   char c;
   bool success;
-  PixelBone_Matrix* matrix = new PixelBone_Matrix(16,8,2,2, 
-                          MATRIX_TOP + MATRIX_LEFT + 
-                          MATRIX_ROWS + MATRIX_ZIGZAG + 
-                          TILE_TOP + TILE_LEFT + TILE_ROWS);
-
-
+  PixelBone_Matrix* matrix = 
+      new PixelBone_Matrix(BOARD_WIDTH,BOARD_HEIGHT, 
+                           MATRIX_TOP + MATRIX_LEFT + 
+                           MATRIX_ROWS + MATRIX_ZIGZAG);
+  
   if (argc == 2 && strcmp(argv[1], "test") == 0) {
     return test();
   }
@@ -403,7 +408,9 @@ int main(int argc, char *argv[]) {
     }
   }
   setBufferedInput(true);
-  matrix.clear();
+  matrix->wait();
+  matrix->clear();
+  matrix->show();
   delete matrix;
 
   return EXIT_SUCCESS;
